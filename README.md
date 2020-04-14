@@ -18,12 +18,12 @@ The PyGame [license](https://github.com/pygame/pygame#license) states that their
 #### Installing dependencies
 
 1. Install [Python 3](https://www.python.org/downloads)
-2. Install [pip](https://pip.pypa.io/en/stable/installing) (usually comes with Python) 
-3. Execute `pip install -r requirements.txt`
+2. Install [pip 3](https://pip.pypa.io/en/stable/installing) (usually comes with Python) 
+3. Execute `pip3 install -r requirements.txt`
 
 #### Running the game
 
-Execute `python pyAlien.py`
+Execute `python3 pyAlien.py`
 
 # Keys
 
