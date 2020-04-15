@@ -14,7 +14,7 @@ class Alien(Sprite):
     frames_per_image = 12
     frames_between_spawn = 16
     speed = 8
-    spawn_percentage_chance = 0.30
+    spawn_percentage_chance = 0.20
     bomb_percentage_chance = 0.01
 
     @classmethod

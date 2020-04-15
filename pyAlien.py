@@ -6,6 +6,7 @@ import pygame
 
 display_width = 640
 fps = 40
+frames_between_difficulty_increase = 5 * fps
 
 
 def repeat(frame, frames_between_action, action):
@@ -26,12 +27,19 @@ def start_music(asset_loader):
     pygame.mixer.music.play(-1)
 
 
+def increase_difficulty():
+    Alien.spawn_percentage_chance = min(1.05 * Alien.spawn_percentage_chance, 1.0)
+    Alien.bomb_percentage_chance = min(1.25 * Alien.bomb_percentage_chance, 1.0)
+    Alien.frames_between_spawn = max(int(Alien.frames_between_spawn - 1), 3)
+    Alien.speed = min(1.03 * Alien.speed, 14.0)
+
+
 def main():
     pygame.init()
 
     pygame.display.set_caption('pyAlien')
 
-    display_rect = Rect(0, 0, display_width, 480)
+    display_rect = Rect(0, 0, 640, 480)
     display = pygame.display.set_mode(display_rect.size)
 
     asset_loader = AssetLoader()
@@ -60,7 +68,7 @@ def main():
     clock = pygame.time.Clock()
     frame = 0
 
-    while True:
+    while player.alive():
         frame += 1
         key_state = pygame.key.get_pressed()
 
@@ -89,20 +97,29 @@ def main():
         # Update game objects
         all.update(display_rect)
 
-        # Check for collisions between bullets and aliens
-        for bullet in pygame.sprite.groupcollide(bullets, aliens, True, True):
+        # Check for collisions between aliens and bullets
+        for bullet in pygame.sprite.groupcollide(bullets, aliens, False, True):
             bullet.explode()
 
-        # Check for collisions between bombs and player
+        # Check for collisions between player and bombs
         for bomb in pygame.sprite.spritecollide(player, bombs, False):
             bomb.explode()
+            player.explode()
 
-        # Potentially spawn new alien
-        repeat(frame, Alien.frames_between_spawn, lambda: Alien.spawn_with_chance(display_rect))
+        # Check for collisions between player and aliens
+        for alien in pygame.sprite.spritecollide(player, aliens, False):
+            alien.explode()
+            player.explode()
 
         # Last alien to potentially drop bomb
         if chance(Alien.bomb_percentage_chance) and last_alien.sprite:
             last_alien.sprite.shoot()
+
+        # Potentially spawn new alien
+        repeat(frame, Alien.frames_between_spawn, lambda: Alien.spawn_with_chance(display_rect))
+
+        # Increase game difficulty over time
+        repeat(frame, frames_between_difficulty_increase, increase_difficulty)
 
         # Draw updated game objects
         all_rects = all.draw(display)

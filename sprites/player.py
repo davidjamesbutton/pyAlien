@@ -1,6 +1,7 @@
 from pygame.sprite import Sprite
 from pygame.transform import flip
 from sprites.bullet import Bullet
+from sprites.bullet import Explosion
 
 
 class Player(Sprite):
@@ -41,3 +42,7 @@ class Player(Sprite):
         self.rect.move_ip((direction * Player.speed, 0))
         self.rect.bottom = self.original_bottom - (self.rect.left // self.bounce % 2)
         self.rect.clamp_ip(display_rect)
+
+    def explode(self):
+        Explosion(self)
+        self.kill()
