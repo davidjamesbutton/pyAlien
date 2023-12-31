@@ -46,6 +46,7 @@ def main():
 
     background = build_background(asset_loader, display_rect)
     display.blit(background, (0, 0))
+    pygame.display.flip()
 
     # Initialize sprite groups
     aliens = pygame.sprite.Group()
